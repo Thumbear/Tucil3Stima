@@ -1,12 +1,17 @@
 dict = {} 
-adjmatrix = {} ; 
+adjmatrix = {} 
+arrSumNode = []
 def Bacafile() :
     f = open("PetaITB.txt", "r")
     i = 0 
     j = 0 
+    pertama = True
     for line in f :
         line = line.replace("\n", "").split(" ")
-        if isNotMatrix(line) : 
+        if (pertama) :
+            arrSumNode.append(int(line[0]))
+            pertama = False 
+        elif isNotMatrix(line) : 
             dict[i] = line
             i += 1 
         else :
@@ -34,4 +39,11 @@ def main() :
     for p in range(len(adjmatrix)) : 
         print(adjmatrix[p])
 
-main()
+
+Bacafile()
+jumlah = arrSumNode[0]
+adjmatriks = [ 0 for i in range(jumlah) ]
+for g in range(jumlah):
+    # for h in range(jumlah) :
+    adjmatriks[g] = adjmatrix[g]
+
