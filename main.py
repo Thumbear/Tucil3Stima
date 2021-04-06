@@ -1,10 +1,60 @@
 import Euclidean as E
 import ReadFile as RF
+import networkx as nx
+import matplotlib.pyplot as plt
 
 listofcost = [] # { 0 : ["ITB" , fn] }
 lintasan = [] # { 0 : { "ITB", level}}
-matriksberbobot = [ [ 0 for i in range(RF.jumlah)] for j in range(RF.jumlah)]
+matriksberbobot = [[0 for i in range(RF.jumlah)] for j in range(RF.jumlah)]
+listofnode = []
+G = nx.Graph()
+# pos = None
 
+
+def showGraph():
+    # bikin list of endge dari RF.dict dan 
+
+    for i in range (len(RF.adjmatrix)):
+        for j in range (len(RF.adjmatrix)):
+            if (RF.adjmatriks[i][j]==1):
+                G.add_edge(RF.dict[i][0], RF.dict[j][0], weight=matriksberbobot[i][j])
+
+    # G.add_edges_from(listofedge)
+    pos = nx.spring_layout(G)
+    nx.draw_networkx(G,pos)
+    # nx.draw_networkx_edges(G,pos,width=1.0, alpha=0.5, edge_color='r')
+    plt.show()
+    print("Simpul Simpul yang Tersedia :")
+    for i in range(RF.jumlah):
+        print(RF.dict[i][0])
+    print("masukan nama simpul dengan benar (case sensitive)")
+    start = str(input("Masukan simpul asal : "))
+    end = str(input("Masukan simpul tujuan: "))
+    AstarSearch(start,end)
+    showGraphLintasan(pos)
+    
+
+def showGraphLintasan(pos):
+    daftarsisi = []
+    daftarnode = []
+    #  Mencari daftar node lintasan
+    daftarnode.append(lintasan[0][0])
+    daftarnode.append(lintasan[len(lintasan) - 1][0])
+    # Mencari daftar sisi
+    for i in range(len(lintasan) - 1):
+        daftarsisi.append((lintasan[i][0], lintasan[i+1][0]))
+
+    nx.draw_networkx(G,pos)
+    nx.draw_networkx_nodes(G,pos, nodelist = [daftarnode[0]] ,node_size = 1000, alpha=0.5, node_color='y')
+    nx.draw_networkx_nodes(G,pos, nodelist = [daftarnode[1]] ,node_size = 1000, alpha=0.5, node_color='g')
+    nx.draw_networkx_edges(G,pos, edgelist = daftarsisi ,width=8, alpha=0.5, edge_color='r')
+    plt.show()
+
+
+
+
+
+    
 def toberbobot() :
     for i in range(RF.jumlah):
         for j in range(RF.jumlah) :
@@ -39,7 +89,6 @@ def AstarSearch(start, goal):
     listVisited.append(start)
     gn = 0 
     level = 1 
-    nodegoal = "" 
     # mendapatkan indeks goal
     for i in range(RF.jumlah):
         if goal == RF.dict[i][0] :
@@ -58,7 +107,7 @@ def AstarSearch(start, goal):
         for i in range(len(RF.adjmatriks[indekscurrNode])):
             hn = 0
             gn = 0 
-            if RF.adjmatriks[indekscurrNode][i] == 1 and (RF.dict[i][0] not in lintasan) :
+            if RF.adjmatriks[indekscurrNode][i] == 1 and (RF.dict[i][0] not in lintasan):
                # RF.dict[i][0] merupakan tetangga 
                 nodetetangga = RF.dict[i][0]
                 gn += matriksberbobot[indekscurrNode][i]
@@ -67,8 +116,6 @@ def AstarSearch(start, goal):
                 listofcost.append([ nodetetangga, fn, level])
                 listVisited.append(nodetetangga)
         level += 1
-        print(listofcost)
-        print(listVisited)
         if isNotEmptyQ(listofcost):
             ismallest = minimum(listofcost)
             if listofcost[ismallest][2] == lintasan[len(lintasan)-1][1] :
@@ -83,7 +130,6 @@ def AstarSearch(start, goal):
     # if nodegoal != "" :
     #     lintasan.append([ nodegoal, 99])
 
-    print(lintasan)
     print("Hasil Lintasan Terpendek Adalah ")
     for i in range(len(lintasan)) :
         if (i != len(lintasan)-1) :
@@ -117,12 +163,15 @@ def hitungjarak(path) :
 
 
 def main() :
-    start = str(input("Masukan simpul asal : "))
-    end = str(input("Masukan simpul tujuan: "))
+
     toberbobot()
-    AstarSearch(start,end)
-    print()
+    # print(hitungjarak(lintasan))
+    showGraph() 
+    # showGraphLintasan()
+    print("Jarak Terpendek adalah : ")
     print(hitungjarak(lintasan))
+    
+    
 
 
 
