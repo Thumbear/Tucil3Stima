@@ -58,7 +58,7 @@ def AstarSearch(start, goal):
         for i in range(len(RF.adjmatriks[indekscurrNode])):
             hn = 0
             gn = 0 
-            if RF.adjmatriks[indekscurrNode][i] == 1 and (RF.dict[i][0] not in listVisited) :
+            if RF.adjmatriks[indekscurrNode][i] == 1 and (RF.dict[i][0] not in lintasan) :
                # RF.dict[i][0] merupakan tetangga 
                 nodetetangga = RF.dict[i][0]
                 gn += matriksberbobot[indekscurrNode][i]
@@ -73,14 +73,15 @@ def AstarSearch(start, goal):
             ismallest = minimum(listofcost)
             if listofcost[ismallest][2] == lintasan[len(lintasan)-1][1] :
                 lintasan.pop()
-            if listofcost[ismallest][0] == goal :
+            if listofcost[ismallest][0] == goal : 
                 lintasan.append([ listofcost[ismallest][0], listofcost[ismallest][2]])
-                break
+                break # memberhentikan while
             lintasan.append([ listofcost[ismallest][0], listofcost[ismallest][2]])
             queue.append(listofcost[ismallest][0])
             listofcost.pop(ismallest)
     # if nodegoal != "" :
     #     lintasan.append([ nodegoal, 99])
+
     print(lintasan)
     print("Hasil Lintasan Terpendek Adalah ")
     for i in range(len(lintasan)) :
@@ -89,6 +90,28 @@ def AstarSearch(start, goal):
         else :
             print(lintasan[i][0])
       
+def hitungjarak(path) :
+
+    jarak = 0 
+    for i in range (1,len(path)) :
+        node = lintasan[i-1][0] 
+        # mencari indeks node sekarang 
+        for j in range(RF.jumlah) :
+            if node == RF.dict[j][0] :
+                idxnode = j
+                break
+        nextnode = lintasan[i][0]
+        # mencari indeks next node
+        for j in range(RF.jumlah) :
+            if nextnode == RF.dict[j][0] :
+                idxpath = i
+                break
+        for j in range(len(matriksberbobot[idxpath])) :
+            if j == idxnode :
+                jarak += matriksberbobot[idxpath][j]
+    return jarak
+
+
 
 
 
@@ -97,6 +120,9 @@ def main() :
     end = str(input("Masukan simpul tujuan: "))
     toberbobot()
     AstarSearch(start,end)
+    print()
+    print(hitungjarak(lintasan))
+
 
 
 main()
