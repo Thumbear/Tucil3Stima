@@ -73,6 +73,7 @@ def AstarSearch(start, goal):
             ismallest = minimum(listofcost)
             if listofcost[ismallest][2] == lintasan[len(lintasan)-1][1] :
                 lintasan.pop()
+                level -= 1 
             if listofcost[ismallest][0] == goal : 
                 lintasan.append([ listofcost[ismallest][0], listofcost[ismallest][2]])
                 break # memberhentikan while
