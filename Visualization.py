@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import networkx as nx
 
+# coba
 G = nx.cubical_graph()
 pos = nx.spring_layout(G)  # positions for all nodes
 
